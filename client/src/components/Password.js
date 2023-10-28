@@ -55,7 +55,7 @@ const Password = () => {
                           </div>
                           <div className='text-center pt-1 py-3 pl-[50px]
                     '>
-                        <span className='text-gray-500'>Forgot Password <Link to="/register" className='
+                        <span className='text-gray-500'>Forgot Password <Link to="/recovery" className='
                         text-red-500 ' >Recover</Link></span>
                     </div>   
                     </div>
