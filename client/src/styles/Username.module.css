@@ -1,10 +1,10 @@
 .glass{
     background: rgba(255, 255, 255, 0.55);
-    border-radius: 16px;
+    border-radius: 18px;
     box-shadow: 0 4px 30px #4747470b;
     backdrop-filter: blur(7.1px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    @apply border-4 border-gray-50  shrink-0 h-3/4 w-[30%] rounded-3xl py-20 px-7 min-w-max;
+    @apply border-4 border-gray-50  shrink-0 h-[90%] w-[30%] rounded-3xl py-10  w-[500px];
 }
 
 .profile_img{
@@ -13,7 +13,7 @@
 }
 
 .textbox {
-  @apply border-0 px-6 ml-5 py-4 rounded-xl w-3/4 h-3/4 shadow-sm text-lg text-center; /* Added text-center class */
+  @apply border-0 px-7 ml-5 py-1 rounded-xl w-3/4 h-3/4 shadow-sm text-lg text-center; /* Added text-center class */
   @apply focus:outline-none;
 }
 
@@ -25,6 +25,16 @@
   background-color: #ff6a6a;
 }
 
+input{
+height:45px;
+width:240px;
+padding-bottom:1px;
+border:2px solid Removed;
+border-radius:10px;
+
+
+
+}
 input[type='file'] {
   display: none;
   @apply text-center

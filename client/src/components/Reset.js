@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import styles from '../styles/Username.module.css'
 import {Toaster} from 'react-hot-toast'
 import {useFormik} from 'formik'
-import { passwordValidate } from '../helper/Validate'
+import { resetPasswordVlidation } from '../helper/Validate'
 
 const Reset = () => {
 
@@ -13,7 +13,7 @@ const Reset = () => {
       password:'admin@123',
       conform_pwd:'admin@123'
     },
-    validate:passwordValidate,
+    validate:resetPasswordVlidation,
     validateOnBlur:false,
     validateOnChange:false,
     onSubmit: async values=>{
@@ -52,7 +52,7 @@ const Reset = () => {
                           <div className='w-[400px] mt-4 ml-[60px]'>
                           <button className=' bg-indigo-500 
                           w-[250px] h-[50px] rounded-lg pl-1'
-                           type='submit'>Sign In</button>
+                           type='submit'>RESET</button>
                           </div>
                            
                     </div>
