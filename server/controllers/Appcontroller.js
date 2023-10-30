@@ -1,7 +1,7 @@
 import UserModel from "../model/UserModel.js"
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-
+import otpGenerator from 'otp-generator'
 
 
 
@@ -137,10 +137,11 @@ export async function getUser(req, res) {
 
 export async function updateUser(req, res) {
     try {
-        const id = req.query.id;
+        // const id = req.query.id;
+        const {userId}=req.user
         if (id) {
             const body = req.body;
-            const result = await UserModel.updateOne({ _id: id }, { $set: body });
+            const result = await UserModel.updateOne({ _id: userId }, { $set: body });
             if (result.n > 0) {
                 return res.status(201).send({ msg: "Record Updated...!" });
             } else {
@@ -155,41 +156,80 @@ export async function updateUser(req, res) {
     }
 }
 
+export async function verifyUser(req, res, next){
+    try {
+        
+        const { username } = req.method == "GET" ? req.query : req.body;
+
+        // check the user existance
+        let exist = await UserModel.findOne({ username });
+        if(!exist) return res.status(404).send({ error : "Can't find User!"});
+        next();
+
+    } catch (error) {
+        return res.status(404).send({ error: "Authentication Error"});
+    }
+}
+
 
 
 export async function generateOTP(req,res){
-
-    res.json('Generate otp Route')
+req.app.locals.OTP= await otpGenerator.generate(6,{lowerCaseAlphabets:false, upperCaseAlphabets:false,
+specialChars:false
+})
+res.status(201).send({code:req.app.locals.OTP})
+  
 }
 
 export async function verifyOTP(req,res){
 
-    res.json('verifyOTP Route')
+   const {code}=req.query
+
+   if(parseInt(req.app.locals.OTP)===parseInt(code)){
+    req.app.locals.OTP=null  //reset opt value
+    req.app.locals.resetSession=true   //start session for reset password
+      return  res.status(201).send({msg:"Verify Successfully"})
+    }
+    return res.status(400).send({error:"invalid otp"})
 }
+
 
 
 
 export async function createResetSession(req,res){
 
-    res.json('createResetSession Route')
+   if(req.app.locals.resetSession){
+    req.app.locals.resetPassword=false  //asllow access thhis route only onece
+      return res.status(201).send({msg:"access granted"})
+   }
+   res.status(404).send({err:"Session Expired"})
 }
 
 
 
 
+export async function resetPassword(req, res) {
+    try {
 
-export async function resetPassword(req,res){
 
-    res.json('resetPassword Route')
+        if(!req.app.locals.resetSession)   res.status(404).send({err:"Session Expired"})
+        const { username, password } = req.body;
+
+        const user = await UserModel.findOne({ username });
+
+        if (!user) {
+            return res.status(404).send({ error: "Username not found" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        await UserModel.updateOne({ username: user.username }, { password: hashedPassword });
+
+        return res.status(201).send({ msg: "Password reset successful" });
+    } catch (error) {
+        return res.status(500).send({ error: "An error occurred" });
+    }
 }
-
-
-
-
-
-
-
-
 
 
 
